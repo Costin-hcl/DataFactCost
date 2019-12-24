@@ -1,0 +1,52 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "CostingTest"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Testing",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference"
+							},
+							"name": "output"
+						}
+					],
+					"transformations": [
+						{
+							"name": "actualMeanTempC"
+						}
+					],
+					"script": "\n\nsource(output(\n\t\tdate as string,\n\t\tactual_mean_temp as double,\n\t\tactual_min_temp as double,\n\t\tactual_max_temp as double,\n\t\taverage_min_temp as double,\n\t\taverage_max_temp as double,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource1 derive(actual_mean_temp_c = multiply(actual_mean_temp - 32, 10/18),\n\t\tactual_min_temp_c = (actual_min_temp - 32)/1.8,\n\t\thot_cold = iif((actual_max_temp-32)/1.8 > 20, 'Hot', 'Cold')) ~> actualMeanTempC\nactualMeanTempC sink(input(\n\t\tdate as string,\n\t\tactual_mean_temp as string,\n\t\tactual_min_temp as string,\n\t\tactual_max_temp as string,\n\t\taverage_min_temp as string,\n\t\taverage_max_temp as string,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> output"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

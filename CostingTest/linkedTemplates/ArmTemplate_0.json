@@ -1,0 +1,320 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "CostingTest"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureBlobStorage2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "KSEA.csv",
+						"container": "weather"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "date",
+						"type": "String"
+					},
+					{
+						"name": "actual_mean_temp",
+						"type": "String"
+					},
+					{
+						"name": "actual_min_temp",
+						"type": "String"
+					},
+					{
+						"name": "actual_max_temp",
+						"type": "String"
+					},
+					{
+						"name": "average_min_temp",
+						"type": "String"
+					},
+					{
+						"name": "average_max_temp",
+						"type": "String"
+					},
+					{
+						"name": "record_min_temp",
+						"type": "String"
+					},
+					{
+						"name": "record_max_temp",
+						"type": "String"
+					},
+					{
+						"name": "record_min_temp_year",
+						"type": "String"
+					},
+					{
+						"name": "record_max_temp_year",
+						"type": "String"
+					},
+					{
+						"name": "actual_precipitation",
+						"type": "String"
+					},
+					{
+						"name": "average_precipitation",
+						"type": "String"
+					},
+					{
+						"name": "record_precipitation",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "weather"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "date",
+						"type": "String"
+					},
+					{
+						"name": "actual_mean_temp",
+						"type": "String"
+					},
+					{
+						"name": "actual_min_temp",
+						"type": "String"
+					},
+					{
+						"name": "actual_max_temp",
+						"type": "String"
+					},
+					{
+						"name": "average_min_temp",
+						"type": "String"
+					},
+					{
+						"name": "average_max_temp",
+						"type": "String"
+					},
+					{
+						"name": "record_min_temp",
+						"type": "String"
+					},
+					{
+						"name": "record_max_temp",
+						"type": "String"
+					},
+					{
+						"name": "record_min_temp_year",
+						"type": "String"
+					},
+					{
+						"name": "record_max_temp_year",
+						"type": "String"
+					},
+					{
+						"name": "actual_precipitation",
+						"type": "String"
+					},
+					{
+						"name": "average_precipitation",
+						"type": "String"
+					},
+					{
+						"name": "record_precipitation",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "output.csv",
+						"container": "weather"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Testing",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "source1",
+							"typeProperties": {}
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference"
+							},
+							"name": "output"
+						}
+					],
+					"transformations": [
+						{
+							"name": "actualMeanTempC"
+						}
+					],
+					"script": "\n\nsource(output(\n\t\tdate as string,\n\t\tactual_mean_temp as double,\n\t\tactual_min_temp as double,\n\t\tactual_max_temp as double,\n\t\taverage_min_temp as double,\n\t\taverage_max_temp as double,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource1 derive(actual_mean_temp_c = multiply(actual_mean_temp - 32, 10/18),\n\t\tactual_min_temp_c = (actual_min_temp - 32)/1.8,\n\t\thot_cold = iif((actual_max_temp-32)/1.8 > 20, 'Hot', 'Cold')) ~> actualMeanTempC\nactualMeanTempC sink(input(\n\t\tdate as string,\n\t\tactual_mean_temp as string,\n\t\tactual_min_temp as string,\n\t\tactual_max_temp as string,\n\t\taverage_min_temp as string,\n\t\taverage_max_temp as string,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> output"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"output": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		}
+	]
+}
