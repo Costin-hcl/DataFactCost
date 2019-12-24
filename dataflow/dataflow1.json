@@ -25,9 +25,12 @@
 			"transformations": [
 				{
 					"name": "actualMeanTempC"
+				},
+				{
+					"name": "Filter1"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tdate as string,\n\t\tactual_mean_temp as double,\n\t\tactual_min_temp as double,\n\t\tactual_max_temp as double,\n\t\taverage_min_temp as double,\n\t\taverage_max_temp as double,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource1 derive(actual_mean_temp_c = multiply(actual_mean_temp - 32, 10/18),\n\t\tactual_min_temp_c = (actual_min_temp - 32)/1.8,\n\t\thot_cold = iif((actual_max_temp-32)/1.8 > 20, 'Hot', 'Cold')) ~> actualMeanTempC\nactualMeanTempC sink(input(\n\t\tdate as string,\n\t\tactual_mean_temp as string,\n\t\tactual_min_temp as string,\n\t\tactual_max_temp as string,\n\t\taverage_min_temp as string,\n\t\taverage_max_temp as string,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> output"
+			"script": "\n\nsource(output(\n\t\tdate as string,\n\t\tactual_mean_temp as double,\n\t\tactual_min_temp as double,\n\t\tactual_max_temp as double,\n\t\taverage_min_temp as double,\n\t\taverage_max_temp as double,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as double,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource1 derive(actual_mean_temp_c = multiply(actual_mean_temp - 32, 10/18),\n\t\tactual_min_temp_c = (actual_min_temp - 32)/1.8,\n\t\thot_cold = iif((actual_max_temp-32)/1.8 > 20, 'Hot', 'Cold')) ~> actualMeanTempC\nactualMeanTempC filter(average_precipitation > 0.2) ~> Filter1\nFilter1 sink(input(\n\t\tdate as string,\n\t\tactual_mean_temp as string,\n\t\tactual_min_temp as string,\n\t\tactual_max_temp as string,\n\t\taverage_min_temp as string,\n\t\taverage_max_temp as string,\n\t\trecord_min_temp as string,\n\t\trecord_max_temp as string,\n\t\trecord_min_temp_year as string,\n\t\trecord_max_temp_year as string,\n\t\tactual_precipitation as string,\n\t\taverage_precipitation as string,\n\t\trecord_precipitation as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> output"
 		}
 	}
 }
