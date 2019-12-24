@@ -1,0 +1,76 @@
+{
+	"name": "DelimitedText2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "weather"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "String"
+			},
+			{
+				"name": "actual_mean_temp",
+				"type": "String"
+			},
+			{
+				"name": "actual_min_temp",
+				"type": "String"
+			},
+			{
+				"name": "actual_max_temp",
+				"type": "String"
+			},
+			{
+				"name": "average_min_temp",
+				"type": "String"
+			},
+			{
+				"name": "average_max_temp",
+				"type": "String"
+			},
+			{
+				"name": "record_min_temp",
+				"type": "String"
+			},
+			{
+				"name": "record_max_temp",
+				"type": "String"
+			},
+			{
+				"name": "record_min_temp_year",
+				"type": "String"
+			},
+			{
+				"name": "record_max_temp_year",
+				"type": "String"
+			},
+			{
+				"name": "actual_precipitation",
+				"type": "String"
+			},
+			{
+				"name": "average_precipitation",
+				"type": "String"
+			},
+			{
+				"name": "record_precipitation",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
